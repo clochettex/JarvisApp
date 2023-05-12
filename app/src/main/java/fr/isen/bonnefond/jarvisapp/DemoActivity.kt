@@ -34,6 +34,11 @@ class DemoActivity : AppCompatActivity() {
         button.setOnClickListener {
             customViewer.rotate()
         }
+
+        val button2 = findViewById<Button>(R.id.button2) as Button
+        button2.setOnClickListener {
+            customViewer.rotate2()
+        }
     }
 
     override fun onResume() {

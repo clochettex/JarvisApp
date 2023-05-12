@@ -65,27 +65,6 @@ class CustomViewer {
     }
 
     fun rotate() {
-        /*
-        val width = 2560/2
-        val height = 1600/2
-        cameraManipulator.grabBegin( width, height, false)
-        for(i in 1..300)
-        cameraManipulator.grabUpdate(width+i, 0)
-        cameraManipulator.grabEnd()
-        */
-
-        //modelViewer.camera.lookAt(0.0,0.0, 0.0, 4.0, 0.0, 0.0, 0.0, 3.0, 0.0)
-
-        /*
-        val entity = modelViewer.asset?.root
-        var tm = modelViewer.engine.transformManager
-
-        val rotateMatrix = FloatArray(16)
-        Matrix.setRotateM(rotateMatrix, 0, 0f, 0f, 0f, 100f)
-        tm.setTransform(entity!!, rotateMatrix)
-*/
-
-
         modelViewer.apply {
             angle += 90f
 
@@ -98,8 +77,23 @@ class CustomViewer {
             tm.setTransform(tm.getInstance(asset!!.root), transpose(rotation).toFloatArray())
             //tm.setTransform(tm.getInstance(asset!!.root), translation.toFloatArray())
         }
-
     }
+
+    fun rotate2() {
+        modelViewer.apply {
+            angle -= 90f
+
+            val rotation = rotation(Float3(0f, 1f, 0f), angle)
+            val translation = translation(Float3(0f, 0f, 0f))
+
+
+            val tm = modelViewer.engine.transformManager
+
+            tm.setTransform(tm.getInstance(asset!!.root), transpose(rotation).toFloatArray())
+            //tm.setTransform(tm.getInstance(asset!!.root), translation.toFloatArray())
+        }
+    }
+
 
     private fun readAsset(context: Context, assetName: String): ByteBuffer {
         val input = context.assets.open(assetName)
