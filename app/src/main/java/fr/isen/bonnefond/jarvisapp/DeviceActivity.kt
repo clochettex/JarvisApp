@@ -5,12 +5,13 @@ import android.bluetooth.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import fr.isen.bonnefond.jarvisapp.databinding.ActivityDeviceBinding
 import java.util.*
+import android.content.BroadcastReceiver
 
 class DeviceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDeviceBinding
@@ -28,6 +29,8 @@ class DeviceActivity : AppCompatActivity() {
     private val characteristicButtonUUID = UUID.fromString("00001234-8e22-4541-9d4c-21edae82ed19")
     private val configNotifications = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 
+    private var demoBroadcastReceiver: BroadcastReceiver? = null
+
     @SuppressLint("MissingPermission", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +38,7 @@ class DeviceActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val deviceName = intent.getStringExtra("DEVICE_NAME")
-        val deviceAddress =  intent.getStringExtra("DEVICE_MAC")
+        val deviceAddress = intent.getStringExtra("DEVICE_MAC")
         binding.deviceName.text = deviceName
 
         val device = bluetoothAdapter!!.getRemoteDevice(deviceAddress)
@@ -48,13 +51,17 @@ class DeviceActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.checkBox2.setOnClickListener() {
+            binding.buttonDemarrage.isEnabled = true;
+        }
     }
 
-    private fun show(){
+    private fun show() {
         runOnUiThread {
             binding.group.visibility = View.VISIBLE
         }
     }
+
     private val gattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission", "SetTextI18n")
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
@@ -69,7 +76,7 @@ class DeviceActivity : AppCompatActivity() {
 
                         val color = Color.parseColor("#F80D1B")
                         binding.connectedTextView.setTextColor(color)
-                        binding.connectedTextView.text ="Disconnected"
+                        binding.connectedTextView.text = "Disconnected"
                         binding.connectedImageView.setImageResource(R.drawable.disconnected_icon)
                     }
                     bluetoothGatt?.close()
@@ -87,7 +94,7 @@ class DeviceActivity : AppCompatActivity() {
                     val service = gatt?.getService(serviceUUID)
                     val characteristicButton = service?.getCharacteristic(characteristicButtonUUID)
                     binding.checkBox.setOnClickListener {
-                        if(!notifications) {
+                        if (!notifications) {
                             characteristicButton?.let { enableNotifications(it) }
                         } else {
                             characteristicButton?.let { disableNotifications(it) }
@@ -101,17 +108,24 @@ class DeviceActivity : AppCompatActivity() {
         }
 
         @Deprecated("Deprecated in Java")
-        override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
-            if(characteristic?.uuid == characteristicButtonUUID) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?
+        ) {
+            if (characteristic?.uuid == characteristicButtonUUID) {
                 val value = characteristic?.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
                 runOnUiThread {
-                    binding.nombre.text = value.toString()
+                    if (value == 1) {
+                        val intent = Intent(this@DeviceActivity, DemoActivity::class.java)
+                        intent.putExtra("ROTATE_DIRECTION", "RIGHT")
+                        startActivity(intent)
+                    }
                 }
-
                 Log.d("Bluetooth", "Received value: $value")
             }
         }
     }
+
     @SuppressLint("MissingPermission")
     fun enableNotifications(characteristic: BluetoothGattCharacteristic) {
         val descriptor = characteristic.getDescriptor(configNotifications)
@@ -120,6 +134,7 @@ class DeviceActivity : AppCompatActivity() {
         bluetoothGatt?.setCharacteristicNotification(characteristic, true)
         notifications = true
     }
+
     @SuppressLint("MissingPermission")
     fun disableNotifications(characteristic: BluetoothGattCharacteristic) {
         bluetoothGatt?.setCharacteristicNotification(characteristic, false)

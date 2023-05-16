@@ -1,15 +1,11 @@
 package fr.isen.bonnefond.jarvisapp
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.Matrix
-import android.os.SystemClock
-import android.util.DisplayMetrics
 import android.view.*
-import androidx.core.graphics.rotationMatrix
-import androidx.core.graphics.values
 import com.google.android.filament.Skybox
-import com.google.android.filament.TransformManager
 import com.google.android.filament.utils.*
 import java.nio.ByteBuffer
 
@@ -32,6 +28,7 @@ class CustomViewer {
         choreographer = Choreographer.getInstance()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun setSurfaceView(mSurfaceView: SurfaceView) {
         modelViewer = ModelViewer(mSurfaceView)
         mSurfaceView.setOnTouchListener(modelViewer)
@@ -64,36 +61,125 @@ class CustomViewer {
         }
     }
 
-    fun rotate() {
+    fun rotateLeft() {
         modelViewer.apply {
-            angle += 90f
+            val currentAngle = angle
+            val targetAngle = angle + 90f
+            val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
+            animator.duration = 700 // durée en millisecondes
+            animator.addUpdateListener {
+                val value = it.animatedValue as Float
+                angle = value
+                val rotation = rotation(Float3(0f, 1f, 0f), value)
+                val tm = modelViewer.engine.transformManager
+                tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
 
-            val rotation = rotation(Float3(0f, 1f, 0f), angle)
-            val translation = translation(Float3(0f, 0f, 0f))
+                val transform = tm.getInstance(asset!!.root)
 
+                val currentTransform = FloatArray(16)
+                tm.getTransform(transform, currentTransform)
 
-            val tm = modelViewer.engine.transformManager
+                val translation = FloatArray(16)
+                Matrix.setIdentityM(translation, 0)
+                Matrix.translateM(translation, 0, 0.04f, -0.1825f, 0.08f) // Translation de 0.2 unité vers le bas
 
-            tm.setTransform(tm.getInstance(asset!!.root), transpose(rotation).toFloatArray())
-            //tm.setTransform(tm.getInstance(asset!!.root), translation.toFloatArray())
+                val newTransform = FloatArray(16)
+                Matrix.multiplyMM(newTransform, 0, currentTransform, 0, translation, 0)
+                tm.setTransform(transform, newTransform)
+            }
+            animator.start()
         }
     }
 
-    fun rotate2() {
+    fun rotateRight() {
         modelViewer.apply {
-            angle -= 90f
+            val currentAngle = angle
+            val targetAngle = angle - 90f
+            val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
+            animator.duration = 700 // durée en millisecondes
+            animator.addUpdateListener {
+                val value = it.animatedValue as Float
+                angle = value
+                val rotation = rotation(Float3(0f, 1f, 0f), value)
+                val tm = modelViewer.engine.transformManager
+                tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
 
-            val rotation = rotation(Float3(0f, 1f, 0f), angle)
-            val translation = translation(Float3(0f, 0f, 0f))
+                val transform = tm.getInstance(asset!!.root)
 
+                val currentTransform = FloatArray(16)
+                tm.getTransform(transform, currentTransform)
 
-            val tm = modelViewer.engine.transformManager
+                val translation = FloatArray(16)
+                Matrix.setIdentityM(translation, 0)
+                Matrix.translateM(translation, 0, 0.04f, -0.1825f, 0.08f) // Translation de 0.2 unité vers le bas
 
-            tm.setTransform(tm.getInstance(asset!!.root), transpose(rotation).toFloatArray())
-            //tm.setTransform(tm.getInstance(asset!!.root), translation.toFloatArray())
+                val newTransform = FloatArray(16)
+                Matrix.multiplyMM(newTransform, 0, currentTransform, 0, translation, 0)
+                tm.setTransform(transform, newTransform)
+            }
+            animator.start()
         }
     }
 
+    fun rotateUp() {
+        modelViewer.apply {
+            val currentAngle = angle
+            val targetAngle = angle + 90f
+            val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
+            animator.duration = 700 // durée en millisecondes
+            animator.addUpdateListener {
+                val value = it.animatedValue as Float
+                angle = value
+                val rotation = rotation(Float3(1f, 0f, 0f), value)
+                val tm = modelViewer.engine.transformManager
+                tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
+
+                val transform = tm.getInstance(asset!!.root)
+
+                val currentTransform = FloatArray(16)
+                tm.getTransform(transform, currentTransform)
+
+                val translation = FloatArray(16)
+                Matrix.setIdentityM(translation, 0)
+                Matrix.translateM(translation, 0, 0.04f, -0.1825f, 0.08f) // Translation de 0.2 unité vers le bas
+
+                val newTransform = FloatArray(16)
+                Matrix.multiplyMM(newTransform, 0, currentTransform, 0, translation, 0)
+                tm.setTransform(transform, newTransform)
+            }
+            animator.start()
+        }
+    }
+
+    fun rotateDown() {
+        modelViewer.apply {
+            val currentAngle = angle
+            val targetAngle = angle - 90f
+            val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
+            animator.duration = 700 // durée en millisecondes
+            animator.addUpdateListener {
+                val value = it.animatedValue as Float
+                angle = value
+                val rotation = rotation(Float3(1f, 0f, 0f), value)
+                val tm = modelViewer.engine.transformManager
+                tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
+
+                val transform = tm.getInstance(asset!!.root)
+
+                val currentTransform = FloatArray(16)
+                tm.getTransform(transform, currentTransform)
+
+                val translation = FloatArray(16)
+                Matrix.setIdentityM(translation, 0)
+                Matrix.translateM(translation, 0, 0.04f, -0.1825f, 0.08f) // Translation de 0.2 unité vers le bas
+
+                val newTransform = FloatArray(16)
+                Matrix.multiplyMM(newTransform, 0, currentTransform, 0, translation, 0)
+                tm.setTransform(transform, newTransform)
+            }
+            animator.start()
+        }
+    }
 
     private fun readAsset(context: Context, assetName: String): ByteBuffer {
         val input = context.assets.open(assetName)

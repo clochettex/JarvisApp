@@ -24,6 +24,6 @@
     <string name="title_scan">Lancer le Scan BLE</string>
     <string name="connected">Connected</string>
     <string name="clic_bouton_principal">Nombre de clics :</string>
-    <string name="recevoir">RECEVOIR</string>
+    <string name="recevoir">RECEVOIR LES MOUVEMENTS</string>
 
 </resources>

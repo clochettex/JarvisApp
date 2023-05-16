@@ -13,7 +13,7 @@
         android:fontFamily="sans-serif-black"
         android:text="TextView"
         android:textColor="#5293FD"
-        android:textSize="34sp"
+        android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,42 +24,32 @@
         android:id="@+id/connectedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="188dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/connected"
         android:textColor="#32B644"
-        android:textSize="24sp"
+        android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/affichageTextView"
         app:layout_constraintEnd_toStartOf="@+id/connectedImageView"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/deviceName"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.82" />
+        app:layout_constraintVertical_bias="1" />
 
     <ImageView
         android:id="@+id/connectedImageView"
-        android:layout_width="40dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="164dp"
+        android:layout_width="57dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="180dp"
         android:layout_marginEnd="100dp"
         app:layout_constraintBottom_toTopOf="@+id/affichageTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toEndOf="@+id/deviceName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85"
         app:srcCompat="@drawable/connected_icon"
         tools:ignore="UnknownId" />
-
-    <TextView
-        android:id="@+id/nombre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="0"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/clicTextView"
-        app:layout_constraintTop_toTopOf="@+id/clicTextView"
-        app:layout_constraintVertical_bias="0.00999999" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group"
@@ -72,36 +62,44 @@
 
     <CheckBox
         android:id="@+id/checkBox"
-        android:layout_width="127dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="370dp"
+        android:layout_height="74dp"
+        android:buttonTint="#A844F7"
         android:text="@string/recevoir"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.925"
-        app:layout_constraintStart_toEndOf="@+id/nombre"
-        app:layout_constraintTop_toTopOf="@+id/clicTextView" />
-
-    <TextView
-        android:id="@+id/clicTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="202dp"
-        android:text="@string/clic_bouton_principal"
-        android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.31"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceName" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.474" />
 
     <Button
         android:id="@+id/buttonDemarrage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lancer"
+        android:layout_width="255dp"
+        android:layout_height="77dp"
+        android:backgroundTint="#B057F7"
+        android:text="Lancer la projection"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
+
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GROGU 3D"
+        android:textSize="20sp"
+        android:buttonTint="#A844F7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox"
+        app:layout_constraintVertical_bias="0.182" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

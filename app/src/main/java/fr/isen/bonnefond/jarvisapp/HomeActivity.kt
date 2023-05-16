@@ -14,7 +14,12 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.buttonClient.setOnClickListener() {
+        binding.buttonSignUp.setOnClickListener() {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.buttonLogIn.setOnClickListener() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }

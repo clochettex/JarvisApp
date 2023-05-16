@@ -99,13 +99,13 @@ class MainActivity : AppCompatActivity() {
     private fun toggleAction(bluetoothLeScanner: BluetoothLeScanner) {
         if (!scanning) {
             binding.titleScan.text = "Scan en cours..."
-            binding.playButton.setImageResource(R.drawable.pause_icon)
+            binding.playButton.setImageResource(R.drawable.icon_pause)
             binding.progressBar.isIndeterminate = true
             scanLeDevice(bluetoothLeScanner)
             scanning = true
         } else {
             binding.titleScan.text = "Lancer le scan"
-            binding.playButton.setImageResource(R.drawable.play_icon)
+            binding.playButton.setImageResource(R.drawable.icon_play)
             binding.progressBar.isIndeterminate = false
             scanLeDevice(bluetoothLeScanner)
             scanning = false
