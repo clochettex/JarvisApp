@@ -7,13 +7,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.SurfaceView
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import fr.isen.bonnefond.jarvisapp.databinding.ActivityDeviceBinding
 import java.util.*
-import android.content.BroadcastReceiver
 
 class DeviceActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityDeviceBinding
 
     private var notifications = false
@@ -24,12 +25,12 @@ class DeviceActivity : AppCompatActivity() {
     }
     private var bluetoothGatt: BluetoothGatt? = null
 
-
     private val serviceUUID = UUID.fromString("0000feed-cc7a-482a-984a-7f2ed5b3e58f")
     private val characteristicButtonUUID = UUID.fromString("00001234-8e22-4541-9d4c-21edae82ed19")
     private val configNotifications = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 
-    private var demoBroadcastReceiver: BroadcastReceiver? = null
+    private lateinit var surfaceView: SurfaceView
+    private lateinit var customViewer: CustomViewer
 
     @SuppressLint("MissingPermission", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,21 +45,33 @@ class DeviceActivity : AppCompatActivity() {
         val device = bluetoothAdapter!!.getRemoteDevice(deviceAddress)
         bluetoothGatt = device.connectGatt(this, false, gattCallback)
 
-        binding.group.visibility = View.GONE
+        binding.group1.visibility = View.GONE
 
         binding.buttonDemarrage.setOnClickListener() {
-            val intent = Intent(this@DeviceActivity, DemoActivity::class.java)
-            startActivity(intent)
+            show2()
         }
 
-        binding.checkBox2.setOnClickListener() {
-            binding.buttonDemarrage.isEnabled = true;
+        surfaceView = findViewById<View>(R.id.surface_view) as SurfaceView
+        customViewer = CustomViewer().apply {
+            loadEntity()
+            setSurfaceView(surfaceView)
+            loadGlb(this@DeviceActivity, "grogu", "grogu")
+            loadIndirectLight(this@DeviceActivity, "venetian_crossroads_2k")
+
         }
     }
 
     private fun show() {
         runOnUiThread {
-            binding.group.visibility = View.VISIBLE
+            binding.group1.visibility = View.VISIBLE
+            binding.group2.visibility = View.GONE
+        }
+    }
+
+    private fun show2() {
+        runOnUiThread {
+            binding.group1.visibility = View.GONE
+            binding.group2.visibility = View.VISIBLE
         }
     }
 
@@ -72,7 +85,7 @@ class DeviceActivity : AppCompatActivity() {
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     runOnUiThread {
-                        binding.group.visibility = View.GONE
+                        binding.group1.visibility = View.GONE
 
                         val color = Color.parseColor("#F80D1B")
                         binding.connectedTextView.setTextColor(color)
@@ -116,12 +129,21 @@ class DeviceActivity : AppCompatActivity() {
                 val value = characteristic?.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
                 runOnUiThread {
                     if (value == 1) {
-                        val intent = Intent(this@DeviceActivity, DemoActivity::class.java)
-                        intent.putExtra("ROTATE_DIRECTION", "RIGHT")
-                        startActivity(intent)
+                        customViewer.rotateRight()
+                    }
+                    if (value == 2) {
+                        customViewer.rotateLeft()
+                    }
+                    if (value == 3) {
+                        customViewer.rotateUp()
+                    }
+                    if (value == 4) {
+                        customViewer.rotateDown()
                     }
                 }
                 Log.d("Bluetooth", "Received value: $value")
+                Log.d("angleX", customViewer.angleX.toString())
+                Log.d("angleY", customViewer.angleY.toString())
             }
         }
     }
@@ -139,5 +161,20 @@ class DeviceActivity : AppCompatActivity() {
     fun disableNotifications(characteristic: BluetoothGattCharacteristic) {
         bluetoothGatt?.setCharacteristicNotification(characteristic, false)
         notifications = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customViewer.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        customViewer.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customViewer.onDestroy()
     }
 }

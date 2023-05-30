@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.Matrix
+import android.os.Handler
 import android.view.*
 import com.google.android.filament.Skybox
 import com.google.android.filament.utils.*
@@ -19,10 +20,12 @@ class CustomViewer {
 
     private lateinit var choreographer: Choreographer
     private lateinit var modelViewer: ModelViewer
+    private lateinit var surfaceView: SurfaceView
 
     private lateinit var cameraManipulator: Manipulator
 
-    private var angle = 0f
+    var angleX = 0f
+    var angleY = 0f
 
     fun loadEntity() {
         choreographer = Choreographer.getInstance()
@@ -60,16 +63,15 @@ class CustomViewer {
             modelViewer.scene.indirectLight = this
         }
     }
-
     fun rotateLeft() {
         modelViewer.apply {
-            val currentAngle = angle
-            val targetAngle = angle + 90f
+            val currentAngle = angleY
+            val targetAngle = angleY + 90f
             val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
             animator.duration = 700 // durée en millisecondes
             animator.addUpdateListener {
                 val value = it.animatedValue as Float
-                angle = value
+                angleY = value
                 val rotation = rotation(Float3(0f, 1f, 0f), value)
                 val tm = modelViewer.engine.transformManager
                 tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
@@ -93,13 +95,13 @@ class CustomViewer {
 
     fun rotateRight() {
         modelViewer.apply {
-            val currentAngle = angle
-            val targetAngle = angle - 90f
+            val currentAngle = angleY
+            val targetAngle = angleY - 90f
             val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
             animator.duration = 700 // durée en millisecondes
             animator.addUpdateListener {
                 val value = it.animatedValue as Float
-                angle = value
+                angleY = value
                 val rotation = rotation(Float3(0f, 1f, 0f), value)
                 val tm = modelViewer.engine.transformManager
                 tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
@@ -123,13 +125,13 @@ class CustomViewer {
 
     fun rotateUp() {
         modelViewer.apply {
-            val currentAngle = angle
-            val targetAngle = angle + 90f
+            val currentAngle = angleX
+            val targetAngle = angleX + 90f
             val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
             animator.duration = 700 // durée en millisecondes
             animator.addUpdateListener {
                 val value = it.animatedValue as Float
-                angle = value
+                angleX = value
                 val rotation = rotation(Float3(1f, 0f, 0f), value)
                 val tm = modelViewer.engine.transformManager
                 tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())
@@ -153,13 +155,13 @@ class CustomViewer {
 
     fun rotateDown() {
         modelViewer.apply {
-            val currentAngle = angle
-            val targetAngle = angle - 90f
+            val currentAngle = angleX
+            val targetAngle = angleX - 90f
             val animator = ValueAnimator.ofFloat(currentAngle, targetAngle)
             animator.duration = 700 // durée en millisecondes
             animator.addUpdateListener {
                 val value = it.animatedValue as Float
-                angle = value
+                angleX = value
                 val rotation = rotation(Float3(1f, 0f, 0f), value)
                 val tm = modelViewer.engine.transformManager
                 tm.setTransform(tm.getInstance(asset!!.root), rotation.toFloatArray())

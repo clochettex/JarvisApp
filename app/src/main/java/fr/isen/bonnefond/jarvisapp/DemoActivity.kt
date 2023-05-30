@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.SurfaceView
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.filament.utils.Float3
+import com.google.android.filament.utils.rotation
 
 
 class DemoActivity : AppCompatActivity() {
@@ -23,11 +25,6 @@ class DemoActivity : AppCompatActivity() {
             setSurfaceView(surfaceView)
             loadGlb(this@DemoActivity, "grogu", "grogu")
             loadIndirectLight(this@DemoActivity, "venetian_crossroads_2k")
-
-        }
-        val rotateDirection = intent.getStringExtra("ROTATE_DIRECTION")
-        if (rotateDirection == "RIGHT") {
-            customViewer.rotateRight()
         }
     }
 
